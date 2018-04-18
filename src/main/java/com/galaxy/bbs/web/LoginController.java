@@ -1,0 +1,80 @@
+package com.galaxy.bbs.web;
+
+import java.util.Date;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.galaxy.bbs.cons.CommonConstant;
+import com.galaxy.bbs.domain.User;
+import com.galaxy.bbs.service.UserService;
+import com.galaxy.bbs.utils.DateFormatUtil;
+
+/**
+ * 论坛管理，这部分功能由论坛管理员操作，包括：创建论坛版块、指定论坛版块管理员、用户锁定/解锁。
+ */
+@Controller
+@RequestMapping("/login")
+public class LoginController extends BaseController {
+
+	@Autowired
+	private UserService userService;
+	
+	private static final Logger logger = Logger.getLogger(LoginController.class);
+
+	/**
+     * 用户登陆
+     * @param request
+     * @param user
+     * @return
+     */
+	@RequestMapping("/doLogin")
+	public ModelAndView login(HttpServletRequest request, User user) {
+		logger.info(String.format("userName:%s", user.getUserName()));
+		User dbUser = userService.queryUserByUserName(user.getUserName());
+		ModelAndView mav = new ModelAndView();
+		mav.setViewName("forward:/login.jsp");
+		if (dbUser == null) {
+			mav.addObject("errorMsg", "用户名不存在");
+		} else if (!dbUser.getPassword().equals(user.getPassword())) {
+			mav.addObject("errorMsg", "用户密码不正确");
+//		} else if () {  // TODO: 验证码校验步骤
+//			
+		} else if (dbUser.getLocked() == User.USER_LOCK) {
+			mav.addObject("errorMsg", "用户已经被锁定，不能登录");
+		} else {
+			dbUser.setLastIp(request.getRemoteAddr());
+			dbUser.setLastVisit(DateFormatUtil.getSimpleDateFormat(new Date()));
+			userService.loginSuccess(dbUser);
+			setSessionUser(request, dbUser);
+			String toUrl = (String)request.getSession().getAttribute(CommonConstant.LOGIN_TO_URL);
+			request.getSession().removeAttribute(CommonConstant.LOGIN_TO_URL);
+			//如果当前会话中没有保存登录之前的请求URL，则直接跳转到主页
+			if(StringUtils.isEmpty(toUrl)){
+				toUrl = "/index.html";
+			}
+			mav.setViewName("redirect:"+toUrl);
+		}
+
+		return mav;
+	}
+
+	/**
+	 * 登录注销
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping("/doLogout")
+	public String logout(HttpSession session) {
+		session.removeAttribute(CommonConstant.USER_CONTEXT);
+		return "forward:/index.jsp";
+	}
+
+}

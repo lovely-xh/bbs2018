@@ -14,7 +14,7 @@
 	            alert("版块名称不能为空，请填上.");
 	            boardName.focus();
 	            return false;
-	         }else if(boardName.value.length > 150){
+	         }else if(boardName.value.length > 50){
 	            alert("版块名称最大长度不能超过50个字符，请调整.");
 	            boardName.focus();
 	            return false;
@@ -38,12 +38,12 @@
 <form action="<c:url value="/forum/addBoard.html"/>" method="post" onsubmit="return mySubmit()">
 <table border="1px"  width="100%">
 	<tr>
-		<td width="20%">版块名称</td>
-		<td width="80%"><input  type="text" name="boardName" style="width:60%;"/></td>
+		<td width="10%">版块名称</td>
+		<td width="90%"><input  type="text" name="boardName" style="width:60%;"/></td>
 	</tr>
 	<tr>
-		<td width="20%">版块简介</td>
-		<td width="80%">
+		<td width="10%">版块简介</td>
+		<td width="90%">
 		    <textarea style="width:80%;height:120px"  name="boardDesc"></textarea>
 		</td>
 	</tr>

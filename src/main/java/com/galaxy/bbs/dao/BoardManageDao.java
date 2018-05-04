@@ -44,8 +44,7 @@ public class BoardManageDao extends BaseDao<Board>{
 	}
 	
 	public List<Integer> queryBoardsByUserId(int user_id) {
-		return getJdbcTemplate().queryForObject(GET_BOARD_MANAGERED_BY_USER_SQL, new Object[] { user_id },
-				new BeanPropertyRowMapper<List<Integer>>());
+		return getJdbcTemplate().queryForList(GET_BOARD_MANAGERED_BY_USER_SQL, new Object[] { user_id }, Integer.class);
 	}
 	
 }

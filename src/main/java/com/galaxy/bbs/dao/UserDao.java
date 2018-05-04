@@ -25,9 +25,9 @@ public class UserDao extends BaseDao<User> {
 
 	private static final String GET_ALL_USER_SQL = "SELECT * FROM t_user order by user_id";
 	
-	private static final String UPDATE_LOGIN_INFO_SQL = "UPDATE t_user SET last_visit=?, last_ip=?, credits=? WHERE user_id=?";
+	private static final String UPDATE_LOGIN_INFO_SQL = "UPDATE t_user SET last_visit=?, last_ip=?, credit=? WHERE user_id=?";
 	
-	private static final String UPDATE_USER_INFO_SQL = "UPDATE t_user SET user_type=?, locked=?, credits=? WHERE user_id=?";
+	private static final String UPDATE_USER_INFO_SQL = "UPDATE t_user SET user_type=?, locked=?, credit=? WHERE user_id=?";
 	
 	private static final String MATCH_COUNT_SQL = "SELECT COUNT(*) FROM t_user WHERE user_name = ?";
 	
@@ -71,7 +71,7 @@ public class UserDao extends BaseDao<User> {
 
 	public void updateUserInfo(User user) {
 		getJdbcTemplate().update(UPDATE_USER_INFO_SQL, new Object[] { user.getUserType(),
-				user.getLocked(), user.getCredit() });
+				user.getLocked(), user.getCredit(), user.getUserId() });
 	}
 	
 	public void updateUserPwd(User user) {

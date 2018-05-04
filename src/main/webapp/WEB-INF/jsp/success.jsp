@@ -6,10 +6,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>操作成功</title>
 <script language=javascript>
-   setTimeout("window.location.href='index.html'",180)
+   setTimeout("window.location.href='/bbs2018/index.html'", 2000)
 </script>
 </head>
-<body>
-    操作成功!
+<body>操作成功!
 </body>
 </html>

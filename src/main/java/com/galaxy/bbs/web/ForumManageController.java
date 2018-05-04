@@ -118,10 +118,10 @@ public class ForumManageController extends BaseController {
 			view.addObject("errorMsg", "用户名(" + userName + ")不存在");
 			view.setViewName("/fail");
 		} else {
-			user.setLocked(Integer.parseInt(locked));
-			userService.lockUser(user.getUserName());
+			userService.lockUser(user.getUserName(), Integer.parseInt(locked));
 			view.setViewName("/success");
 		}
+
 		return view;
 	}
 }
